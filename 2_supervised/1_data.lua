@@ -182,14 +182,14 @@ for i,channel in ipairs(channels) do
    mean[i] = trainData.data[{ {},i,{},{} }]:mean()
    std[i] = trainData.data[{ {},i,{},{} }]:std()
    trainData.data[{ {},i,{},{} }]:add(-mean[i])
-   trainData.data[{ {},i,{},{} }]:div(-std[i])
+   trainData.data[{ {},i,{},{} }]:div(std[i])
 end
 
 -- Normalize test data, using the training means/stds
 for i,channel in ipairs(channels) do
    -- normalize each channel globally:
    testData.data[{ {},i,{},{} }]:add(-mean[i])
-   testData.data[{ {},i,{},{} }]:div(-std[i])
+   testData.data[{ {},i,{},{} }]:div(std[i])
 end
 
 -- Local normalization
@@ -204,10 +204,10 @@ normalization = nn.SpatialContrastiveNormalization(1, neighborhood):float()
 
 -- Normalize all Y channels locally:
 for i = 1,trainData:size() do
-   trainData.data[{ i,{1},{},{} }] = normalization(trainData.data[{ i,{1},{},{} }])
+   trainData.data[{ i,{1},{},{} }] = normalization:forward(trainData.data[{ i,{1},{},{} }])
 end
 for i = 1,testData:size() do
-   testData.data[{ i,{1},{},{} }] = normalization(testData.data[{ i,{1},{},{} }])
+   testData.data[{ i,{1},{},{} }] = normalization:forward(testData.data[{ i,{1},{},{} }])
 end
 
 ----------------------------------------------------------------------
