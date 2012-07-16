@@ -20,7 +20,7 @@ tar = 'http://data.neuflow.org/data/svhn.t7.tgz'
 
 if not paths.dirp('housenumbers') then
    os.execute('wget ' .. tar)
-   os.execute('tar xvf ' .. paths.filename(tar))
+   os.execute('tar xvf ' .. paths.basename(tar))
 end
 
 train_file = 'housenumbers/train_32x32.t7'
