@@ -67,5 +67,5 @@ print '==> visualizing data'
 
 require 'image'
 image.display{image=trainData.data[{ {1,256} }], nrow=16, legend='Some training samples'}
-image.display{image=extraData.data[{ {1,256} }], nrow=16, legend='Extra training samples'}
+image.display{image=extraTrainData.data[{ {1,256} }], nrow=16, legend='Extra training samples'}
 image.display{image=testData.data[{ {1,256} }], nrow=16, legend='Some test samples'}
