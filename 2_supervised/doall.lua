@@ -27,6 +27,7 @@ cmd:text()
 cmd:text('Options:')
 -- global:
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
+cmd:option('-threads', 2, 'number of threads')
 -- data:
 cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
 -- model:
@@ -47,7 +48,7 @@ cmd:text()
 opt = cmd:parse(arg or {})
 
 -- nb of threads and fixed seed (for repeatable experiments)
-torch.setnumthreads(4)
+torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
 ----------------------------------------------------------------------
