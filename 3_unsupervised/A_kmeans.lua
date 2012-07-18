@@ -114,7 +114,7 @@ for t = 1,params.maxiter do
       -- display new filters:
       win = image.display{image=kernels_normed, padding=2, symmetric=true, zoom=2, win=win,
                           nrow=math.floor(math.sqrt(params.nkernels)),
-                          legend='Normalized Kernels @ t='..t}
+                          legend='Kernels @ t='..t}
 
       -- cleanup
       collectgarbage()
@@ -133,16 +133,16 @@ print('==> computed ' .. params.nkernels .. ' kernels')
 print('==> least significant kernel has ' .. (kernels_avg:min()-1) .. ' averages')
 print('==> most significant kernel has ' .. (kernels_avg:max()-1) .. ' averages')
 
--- discard filters that didn't attract enough attention:
+-- discard filters that are not representative enough:
 final_kernels = {}
 for i = 1,params.nkernels do
-   if kernels_avg[i] > 10 then
+   if kernels_avg[i] > 0.1*kernels_avg_max then
       table.insert(final_kernels, kernels_normed[i])
    end
 end
 print('==> retaining ' .. #final_kernels .. ' top kernels')
 
 -- display
-image.display{image=kernels_normed, padding=2, symmetric=true, zoom=2,
+image.display{image=final_kernels, padding=2, symmetric=true, zoom=2,
               nrow=math.floor(math.sqrt(#final_kernels)),
-              legend='Most Significant Kernels'}
+              legend='Final Kernels'}
