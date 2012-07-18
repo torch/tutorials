@@ -136,7 +136,7 @@ print('==> most significant kernel has ' .. (kernels_avg:max()-1) .. ' averages'
 -- discard filters that are not representative enough:
 final_kernels = {}
 for i = 1,params.nkernels do
-   if kernels_avg[i] > 0.1*kernels_avg_max then
+   if kernels_avg[i] > 0.05*kernels_avg_max then
       table.insert(final_kernels, kernels_normed[i])
    end
 end
@@ -145,4 +145,4 @@ print('==> retaining ' .. #final_kernels .. ' top kernels')
 -- display
 image.display{image=final_kernels, padding=2, symmetric=true, zoom=2,
               nrow=math.floor(math.sqrt(#final_kernels)),
-              legend='Final Kernels'}
+              legend='Top Kernels'}
