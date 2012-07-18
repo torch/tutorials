@@ -58,12 +58,16 @@ elseif opt.loss == 'nll' then
 
 elseif opt.loss == 'mse' then
 
+   -- for MSE, we add a tanh, to restrict the model's output
+   model:add(nn.Tanh())
+
    -- The mean-square error is not recommended for classification
    -- tasks, as it typically tries to do too much, by exactly modeling
    -- the 1-of-N distribution. For the sake of showing more examples,
    -- we still provide it here:
 
    criterion = nn.MSECriterion()
+   criterion.sizeAverage = false
 
    -- Compared to the other losses, the MSE criterion needs a distribution
    -- as a target, instead of an index. Indeed, it is a regression loss!
