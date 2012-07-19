@@ -77,4 +77,9 @@ function cb (kernels)
 end
 
 -- run k-means
-unsup.kmeans(data,params.nkernels,0.1,params.niter,params.batchsize,cb,true)
+kernels = unsup.kmeans(data,params.nkernels,0.1,params.niter,params.batchsize,cb,true)
+
+-- save kernels
+file = 'kmeans_'..params.nkernels..'.t7'
+print('==> saving centroids to disk: ' .. file)
+torch.save(file, kernels)
