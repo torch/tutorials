@@ -193,6 +193,9 @@ for i,channel in ipairs(channels) do
 end
 
 -- Local normalization
+-- (note: the global normalization is useless, if this local normalization
+-- is applied on all channels... the global normalization code is kept just
+-- for the tutorial's purpose)
 print '==> preprocessing data: normalize Y (luminance) channel locally'
 
 -- Define the normalization neighborhood:
