@@ -196,7 +196,7 @@ end
 -- (note: the global normalization is useless, if this local normalization
 -- is applied on all channels... the global normalization code is kept just
 -- for the tutorial's purpose)
-print '==> preprocessing data: normalize Y (luminance) channel locally'
+print '==> preprocessing data: normalize all three channels locally'
 
 -- Define the normalization neighborhood:
 neighborhood = image.gaussian1D(13)
