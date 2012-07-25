@@ -159,11 +159,10 @@ function train()
    -- time taken
    time = sys.clock() - time
    time = time / trainData:size()
-   print("==> time to learn 1 sample = " .. (time*1000) .. 'ms')
+   print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    -- print confusion matrix
    print(confusion)
-   confusion:zero()
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
@@ -179,5 +178,6 @@ function train()
    torch.save(filename, model)
 
    -- next epoch
+   confusion:zero()
    epoch = epoch + 1
 end

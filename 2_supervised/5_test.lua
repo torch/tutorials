@@ -41,11 +41,10 @@ function test()
    -- timing
    time = sys.clock() - time
    time = time / testData:size()
-   print("==> time to test 1 sample = " .. (time*1000) .. 'ms')
+   print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    -- print confusion matrix
    print(confusion)
-   confusion:zero()
 
    -- update log/plot
    testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
@@ -59,4 +58,7 @@ function test()
       -- restore parameters
       parameters:copy(cachedparams)
    end
+   
+   -- next iteration:
+   confusion:zero()
 end
