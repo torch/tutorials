@@ -203,7 +203,7 @@ neighborhood = image.gaussian1D(13)
 
 -- Define our local normalization operator (It is an actual nn module, 
 -- which could be inserted into a trainable model):
-normalization = nn.SpatialContrastiveNormalization(1, neighborhood, 1e-3):float()
+normalization = nn.SpatialContrastiveNormalization(1, neighborhood, 1):float()
 
 -- Normalize all channels locally:
 for c in ipairs(channels) do
