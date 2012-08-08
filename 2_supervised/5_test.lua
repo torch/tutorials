@@ -30,7 +30,8 @@ function test()
       xlua.progress(t, testData:size())
 
       -- get new sample
-      local input = testData.data[t]:double()
+      local input = testData.data[t]
+      if opt.type == 'double' then input = input:double() end
       local target = testData.labels[t]
 
       -- test sample
