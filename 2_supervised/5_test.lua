@@ -31,7 +31,8 @@ function test()
 
       -- get new sample
       local input = testData.data[t]
-      if opt.type == 'double' then input = input:double() end
+      if opt.type == 'double' then input = input:double()
+      elseif opt.type == 'cuda' then input = input:cuda() end
       local target = testData.labels[t]
 
       -- test sample

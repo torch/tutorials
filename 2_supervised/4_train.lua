@@ -41,6 +41,13 @@ if not opt then
 end
 
 ----------------------------------------------------------------------
+-- CUDA?
+if opt.type == 'cuda' then
+   model:cuda()
+   criterion:cuda()
+end
+
+----------------------------------------------------------------------
 print '==> defining some tools'
 
 -- classes
@@ -88,7 +95,8 @@ function train()
          -- load new sample
          local input = trainData.data[shuffle[i]]
          local target = trainData.labels[shuffle[i]]
-         if opt.type == 'double' then input = input:double() end
+         if opt.type == 'double' then input = input:double()
+         elseif opt.type == 'cuda' then input = input:cuda() end
          table.insert(inputs, input)
          table.insert(targets, target)
       end
