@@ -9,11 +9,20 @@ print '==> testing backprop with Jacobian (finite element)'
 -- to be deterministic...
 -- so the code is the same, except that we only generate
 -- the random noise once, for the whole test.
+firsttime = true
 function nn.Dropout.updateOutput(self, input)
-   self.noise = self.noise or torch.rand(input:size()) -- uniform noise between 0 and 1
-   self.noise:add(1 - self.p):floor()  -- a percentage of noise
+   if firsttime then
+      self.noise:resizeAs(input)
+      if self.p > 0 then
+         self.noise:bernoulli(1-self.p)
+      else
+         self.noise:zero()
+      end
+      firsttime = false
+   end
    self.output:resizeAs(input):copy(input)
    self.output:cmul(self.noise)
+   self.output:div(1-self.p)
    return self.output
 end
 
@@ -25,7 +34,7 @@ local jac = nn.Jacobian
 local ini = math.random(10,20)
 local inj = math.random(10,20)
 local ink = math.random(10,20)
-local percentage = 0.5
+local percentage = 0.25
 local input = torch.Tensor(ini,inj,ink):zero()
 local module = nn.Dropout(percentage)
 

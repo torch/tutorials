@@ -8,7 +8,7 @@ require 'image'
 n = nn.Dropout(0.5)
 
 -- load an image:
-i = image.lena()
+i = image.lena(true)
 
 -- process the image:
 result = n:forward(i)
