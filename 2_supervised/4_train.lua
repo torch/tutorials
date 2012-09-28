@@ -68,6 +68,43 @@ if model then
 end
 
 ----------------------------------------------------------------------
+print '==> configuring optimizer'
+
+if opt.optimization == 'CG' then
+   optimState = {
+      maxIter = opt.maxIter
+   }
+   optimMethod = optim.cg
+
+elseif opt.optimization == 'LBFGS' then
+   optimState = {
+      learningRate = opt.learningRate,
+      maxIter = opt.maxIter,
+      nCorrection = 10
+   }
+   optimMethod = optim.lbfgs
+
+elseif opt.optimization == 'SGD' then
+   optimState = {
+      learningRate = opt.learningRate,
+      weightDecay = opt.weightDecay,
+      momentum = opt.momentum,
+      learningRateDecay = 5e-7
+   }
+   optimMethod = optim.sgd
+
+elseif opt.optimization == 'ASGD' then
+   optimState = {
+      eta0 = opt.learningRate,
+      t0 = trsize * opt.t0
+   }
+   optimMethod = optim.asgd
+
+else
+   error('unknown optimization method')
+end
+
+----------------------------------------------------------------------
 print '==> defining training procedure'
 
 function train()
@@ -138,30 +175,10 @@ function train()
                     end
 
       -- optimize on current mini-batch
-      if opt.optimization == 'CG' then
-         config = config or {maxIter = opt.maxIter}
-         optim.cg(feval, parameters, config)
-
-      elseif opt.optimization == 'LBFGS' then
-         config = config or {learningRate = opt.learningRate,
-                             maxIter = opt.maxIter,
-                             nCorrection = 10}
-         optim.lbfgs(feval, parameters, config)
-
-      elseif opt.optimization == 'SGD' then
-         config = config or {learningRate = opt.learningRate,
-                             weightDecay = opt.weightDecay,
-                             momentum = opt.momentum,
-                             learningRateDecay = 5e-7}
-         optim.sgd(feval, parameters, config)
-
-      elseif opt.optimization == 'ASGD' then
-         config = config or {eta0 = opt.learningRate,
-                             t0 = trsize * opt.t0}
-         _,_,average = optim.asgd(feval, parameters, config)
-
+      if optimMethod == optim.asgd then
+         _,_,average = optimMethod(feval, parameters, optimState)
       else
-         error('unknown optimization method')
+         optimMethod(feval, parameters, optimState)
       end
    end
 
