@@ -130,8 +130,8 @@ function train()
       -- create mini batch
       for i = 1,opt.batchSize do
          -- load new sample
-         local input = trainData.data[shuffle[i]]
-         local target = trainData.labels[shuffle[i]]
+         local input = trainData.data[shuffle[math.min(trainData:size(),t+i-1)]]
+         local target = trainData.labels[shuffle[math.min(trainData:size(),t+i-1)]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
          batch.inputs = batch.inputs or input.new(opt.batchSize, (#input)[1], (#input)[2], (#input)[3])
@@ -154,7 +154,7 @@ function train()
                           -- estimate df/dW
                           local df_do = criterion:backward(output, batch.targets[1])
                           model:backward(batch.inputs[1], df_do)
-
+                          
                           -- update confusion
                           confusion:add(output, batch.targets[1])
 
