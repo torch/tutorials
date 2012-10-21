@@ -107,6 +107,8 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
+batch = {}
+
 function train()
 
    -- epoch tracker
@@ -126,52 +128,55 @@ function train()
       xlua.progress(t, trainData:size())
 
       -- create mini batch
-      local inputs = {}
-      local targets = {}
-      for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
+      for i = 1,opt.batchSize do
          -- load new sample
          local input = trainData.data[shuffle[i]]
          local target = trainData.labels[shuffle[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
+         batch.inputs = batch.inputs or input.new(opt.batchSize, (#input)[1], (#input)[2], (#input)[3])
+         batch.targets = batch.targets or input.new(opt.batchSize)
+         batch.inputs[i] = input
+         batch.targets[i] = target
       end
 
       -- create closure to evaluate f(X) and df/dX
-      local feval = function(x)
-                       -- get new parameters
-                       if x ~= parameters then
-                          parameters:copy(x)
-                       end
-
+      local feval = function()
                        -- reset gradients
                        gradParameters:zero()
 
-                       -- f is the average of all criterions
-                       local f = 0
-
-                       -- evaluate function for complete mini batch
-                       for i = 1,#inputs do
+                       -- stochastic or batch
+                       if opt.batchSize == 1 then
                           -- estimate f
-                          local output = model:forward(inputs[i])
-                          local err = criterion:forward(output, targets[i])
-                          f = f + err
+                          local output = model:forward(batch.inputs[1])
+                          local f = criterion:forward(output, batch.targets[1])
 
                           -- estimate df/dW
-                          local df_do = criterion:backward(output, targets[i])
-                          model:backward(inputs[i], df_do)
+                          local df_do = criterion:backward(output, batch.targets[1])
+                          model:backward(batch.inputs[1], df_do)
 
                           -- update confusion
-                          confusion:add(output, targets[i])
+                          confusion:add(output, batch.targets[1])
+
+                          -- return f and df/dX
+                          return f,gradParameters
+                       else
+                          -- estimate f
+                          local outputs = model:forward(batch.inputs)
+                          local f = criterion:forward(outputs, batch.targets)
+
+                          -- estimate df/dW
+                          local df_do = criterion:backward(outputs, batch.targets)
+                          model:backward(batch.inputs, df_do)
+
+                          -- update confusion
+                          for i = 1,opt.batchSize do
+                             confusion:add(outputs[i], batch.targets[i])
+                          end
+
+                          -- return f and df/dX
+                          return f,gradParameters
                        end
-
-                       -- normalize gradients and f(X)
-                       gradParameters:div(#inputs)
-                       f = f/#inputs
-
-                       -- return f and df/dX
-                       return f,gradParameters
                     end
 
       -- optimize on current mini-batch

@@ -88,16 +88,14 @@ elseif opt.model == 'convnet' then
    model = nn.Sequential()
 
    -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
-   model:add(nn.SpatialConvolutionMap(nn.tables.random(nfeats, nstates[1], fanin[1]), filtsize, filtsize))
+   model:add(nn.SpatialConvolution(nfeats, nstates[1], filtsize, filtsize))
    model:add(nn.Tanh())
-   model:add(nn.SpatialLPPooling(nstates[1],2,poolsize,poolsize,poolsize,poolsize))
-   model:add(nn.SpatialSubtractiveNormalization(16, normkernel))
+   model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
    -- stage 2 : filter bank -> squashing -> L2 pooling -> normalization
-   model:add(nn.SpatialConvolutionMap(nn.tables.random(nstates[1], nstates[2], fanin[2]), filtsize, filtsize))
+   model:add(nn.SpatialConvolution(nstates[1], nstates[2], filtsize, filtsize))
    model:add(nn.Tanh())
-   model:add(nn.SpatialLPPooling(nstates[2],2,poolsize,poolsize,poolsize,poolsize))
-   model:add(nn.SpatialSubtractiveNormalization(nstates[2], normkernel))
+   model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
    -- stage 3 : standard 2-layer neural network
    model:add(nn.Reshape(nstates[2]*filtsize*filtsize))
