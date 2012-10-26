@@ -68,7 +68,7 @@ cmd:option('-maxhessian', 500, 'max hessian to avoid extreme slow down')
 cmd:option('-kernelsize', 9, 'size of convolutional kernels')
 
 -- logging:
-cmd:option('-datafile', 'http://data.neuflow.org/data/tr-berkeley-N5K-M56x56-lcn.bin', 'Dataset URL')
+cmd:option('-datafile', 'http://data.neuflow.org/data/tr-berkeley-N5K-M56x56-lcn.ascii', 'Dataset URL')
 cmd:option('-statinterval', 5000, 'interval for saving stats and models')
 cmd:option('-v', false, 'be verbose')
 cmd:option('-display', true, 'display stuff')
