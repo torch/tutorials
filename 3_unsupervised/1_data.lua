@@ -2,7 +2,7 @@
 local data_verbose = false
 
 function getdata(datafile, inputsize, std)
-   local data = torch.load(dataFile, 'ascii')
+   local data = torch.load(datafile, 'ascii')
    local dataset ={}
 
    local std = std or 0.2
