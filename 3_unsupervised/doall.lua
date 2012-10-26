@@ -98,7 +98,7 @@ dofile '1_data.lua'
 
 filename = paths.basename(params.datafile)
 if not paths.filep(filename) then
-   os.execute('wget ' .. params.datafile .. '; '.. 'tar xvf ' .. filename)
+   os.execute('wget ' .. params.datafile)
 end
 dataset = getdata(filename, params.inputsize)
 
