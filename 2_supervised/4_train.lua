@@ -89,7 +89,7 @@ elseif opt.optimization == 'SGD' then
       learningRate = opt.learningRate,
       weightDecay = opt.weightDecay,
       momentum = opt.momentum,
-      learningRateDecay = 5e-7
+      learningRateDecay = 1e-7
    }
    optimMethod = optim.sgd
 
