@@ -20,7 +20,7 @@ cmd:text('Training a simple sparse coding dictionary on Berkeley images')
 cmd:text()
 cmd:text('Options')
 cmd:option('-dir', 'outputs', 'subdirectory to save experiments in')
-cmd:option('-datafile', 'http://data.neuflow.org/data/tr-berkeley-N5K-M56x56-lcn.bin', 'Dataset URL')
+cmd:option('-datafile', 'http://data.neuflow.org/data/tr-berkeley-N5K-M56x56-lcn.ascii', 'Dataset URL')
 cmd:option('-seed', 1, 'initial random seed')
 cmd:option('-threads', 4, 'threads')
 cmd:option('-inputsize', 9, 'size of each input patches')
@@ -52,8 +52,9 @@ dofile '1_data.lua'
 
 filename = paths.basename(params.datafile)
 if not paths.filep(filename) then
-   os.execute('wget ' .. params.datafile .. '; '.. 'tar xvf ' .. filename)
+   os.execute('wget ' .. params.datafile)
 end
+
 dataset = getdata(filename, params.inputsize)
 dataset:conv()
 
@@ -69,7 +70,7 @@ for i = 1,params.nsamples do
 end
 
 -- callback: display kernels
-function cb (kernels)
+function cb (_,kernels,_)
    win = image.display{image=kernels:reshape(params.nkernels,params.inputsize,params.inputsize),
                        padding=2, symmetric=true, zoom=2, win=win,
                        nrow=math.floor(math.sqrt(params.nkernels)),
@@ -77,7 +78,7 @@ function cb (kernels)
 end
 
 -- run k-means
-kernels = unsup.kmeans(data,params.nkernels,0.1,params.niter,params.batchsize,cb,true)
+kernels = unsup.kmeans(data, params.nkernels, params.niter, params.batchsize, cb, true)
 
 -- save kernels
 file = 'kmeans_'..params.nkernels..'.t7'
