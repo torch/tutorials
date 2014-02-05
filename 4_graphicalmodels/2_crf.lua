@@ -25,28 +25,36 @@ end
 --
 do
    -- make training data
-   sample = torch.load(paths.concat(paths.install_lua_path, 'gm', 'X.t7'))
+   sample = torch.load('X.t7')
    nRows,nCols = sample:size(1),sample:size(2)
    nNodes = nRows*nCols
    nStates = 2
    nInstances = 100
+
    -- make labels (MAP):
    y = tensor(nInstances,nRows*nCols)
    for i = 1,nInstances do
       y[i] = sample
    end
    y = y + 1
+
    -- make noisy training data:
    X = tensor(nInstances,1,nRows*nCols)
    for i = 1,nInstances do
       X[i] = sample
    end
    X = X + randn(X:size())/2
+
    -- display a couple of input examples
-   require 'image'
-   image.display{image={X[1]:reshape(32,32),X[2]:reshape(32,32),
-                        X[3]:reshape(32,32),X[4]:reshape(32,32)}, 
-                 zoom=4, padding=1, nrow=2, legend='training examples'}
+   require 'gfx.js'
+   gfx.image({
+      X[1]:reshape(32,32),
+      X[2]:reshape(32,32),
+      X[3]:reshape(32,32),
+      X[4]:reshape(32,32)
+   }, {
+      zoom=4, legend='training examples'
+   })
 
    -- define adjacency matrix (4-connexity lattice)
    local adj = gm.adjacency.lattice2d(nRows,nCols,4)
@@ -106,14 +114,24 @@ do
 
    -- and train on 30 samples
    require 'optim'
-   local sgdconf = {learningRate=1e-3}
+   local sgdState = {
+      learningRate = 1e-3,
+      learningRateDecay = 1e-2,
+      weightDecay = 1e-5,
+   }
    for iter = 1,100 do
-     local i = floor(uniform(1,nInstances)+0.5)
-     local feval = function()
-        return g:nll(Xnode[i],Xedge[i],y[i],'bp')
-     end
-     _,fs = optim.sgd(feval,g.w,sgdconf)
-     print('SGD @ iteration ' .. iter .. ': objective = ' .. fs[1])
+      -- SGD step:
+      optim.sgd(function()
+         -- random sample:
+         local i = torch.random(1,nInstances)
+         -- compute f+grad:
+         local f,grad = g:nll('bp',y[i],Xnode[i],Xedge[i])
+         -- verbose:
+         print('SGD @ iteration ' .. iter .. ': objective = ', f)
+         -- return f+grad:
+         return f,grad
+      end, 
+      g.w, sgdState)
    end
 
    -- the model is trained, generate node/edge potentials, and test
@@ -126,6 +144,15 @@ do
       table.insert(marginals,nodeBel[{ {},2 }]:reshape(nRows,nCols))
       table.insert(labelings,labeling:reshape(nRows,nCols))
    end
-   image.display{image=marginals, zoom=4, padding=1, nrow=2, legend='marginals'}
-   image.display{image=labelings, zoom=4, padding=1, nrow=2, legend='labeling'}
+
+   -- display
+   gfx.image(marginals, {
+      zoom=4, legend='marginals'
+   })
+   for _,labeling in ipairs(labelings) do
+      labeling:add(-1)
+   end
+   gfx.image(labelings, {
+      zoom=4, legend='labelings'
+   })
 end
