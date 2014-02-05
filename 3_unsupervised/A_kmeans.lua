@@ -82,7 +82,7 @@ data = unsup.zca_whiten(data,nil,nil,nil,epsilon)
 print '==> running k-means'
 function cb (step,kernels)
    local filters = {}
-   local ks = kernels:reshape(params.nkernels,3,inputsize,inputsize)
+   local ks = kernels:reshape(params.nkernels,3,params.inputsize,params.inputsize)
    for i = 1,params.nkernels do
       filters[i] = ks[i]:clone():div(ks[i]:max())
    end
