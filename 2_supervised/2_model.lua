@@ -14,7 +14,8 @@
 ----------------------------------------------------------------------
 
 require 'torch'   -- torch
-require 'image'   -- to visualize the dataset
+require 'image'   -- for image transforms
+require 'gfx.js'  -- to visualize the dataset
 require 'nn'      -- provides all sorts of trainable modules/layers
 
 ----------------------------------------------------------------------
@@ -115,13 +116,12 @@ print '==> here is the model:'
 print(model)
 
 ----------------------------------------------------------------------
--- Visualization is quite easy, using image.display(). Check out:
--- help(image.display), for more info about options.
+-- Visualization is quite easy, using gfx.image().
 
 if opt.visualize then
    if opt.model == 'convnet' then
       print '==> visualizing ConvNet filters'
-      image.display{image=model:get(1).weight, padding=2, zoom=4, legend='filters @ layer 1'}
-      image.display{image=model:get(5).weight, padding=2, zoom=4, nrow=32, legend='filters @ layer 2'}
+      gfx.image(model:get(1).weight, {zoom=2, legend='L1'})
+      gfx.image(model:get(5).weight, {zoom=2, legend='L2'})
    end
 end
