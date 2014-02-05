@@ -10,6 +10,7 @@
 
 require 'image'
 require 'unsup'
+require 'gfx.js'
 
 ----------------------------------------------------------------------
 -- parse command-line options
@@ -61,7 +62,6 @@ dataset:conv()
 ----------------------------------------------------------------------
 -- run k-means
 --
-print '==> running k-means'
 
 -- create dataset
 data = torch.Tensor(params.nsamples,params.inputsize*params.inputsize)
@@ -69,12 +69,24 @@ for i = 1,params.nsamples do
    data[i] = dataset[i][1]
 end
 
+print '==> normalizing patches'
+for i = 1,params.nsamples do
+   data[i]:add(-data[i]:mean())
+   data[i]:div(math.sqrt(data[i]:var() + 10))
+end
+
+print '==> whitening patches'
+data = unsup.zca_whiten(data,nil,nil,nil,epsilon)
+
 -- callback: display kernels
-function cb (_,kernels,_)
-   win = image.display{image=kernels:reshape(params.nkernels,params.inputsize,params.inputsize),
-                       padding=2, symmetric=true, zoom=2, win=win,
-                       nrow=math.floor(math.sqrt(params.nkernels)),
-                       legend='K-Means Centroids'}
+print '==> running k-means'
+function cb (step,kernels)
+   local filters = {}
+   local ks = kernels:reshape(params.nkernels,3,inputsize,inputsize)
+   for i = 1,params.nkernels do
+      filters[i] = ks[i]:clone():div(ks[i]:max())
+   end
+   gfx.image(filters, {zoom=2, legend='K-Means Centroids'})
 end
 
 -- run k-means
