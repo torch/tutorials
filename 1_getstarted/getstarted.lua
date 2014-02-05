@@ -8,6 +8,8 @@
 -- and then press 'y' or 'return' at each step, to keep going, or 'n'
 -- to terminate.
 
+require 'gfx.go'
+
 ----------------------------------------------------------------------
 -- little function to pause execution, and request user input
 function next()
@@ -41,23 +43,18 @@ next()
 -- snippet 3
 require 'image'
 i = image.lena()
-image.display(i)
+gfx.image(i)
 next()
 
 ----------------------------------------------------------------------
 -- snippet 4
 require 'nn'
 n = nn.SpatialConvolution(1,16,12,12)
-image.display{image=n.weight, padding=2, zoom=4, legend='filters'}
+gfx.image(n.weight, {zoom=2, legend=''})
 next()
 
 ----------------------------------------------------------------------
 -- snippet 5
-n:forward(image.rgb2y(i))
-image.display{image=n.output, padding=2, zoom=0.25, legend='states'}
-next()
-
-----------------------------------------------------------------------
--- snippet 6
-browse()
+res = n:forward(image.rgb2y(i))
+gfx.image(res, {zoom=0.25, legend='states'})
 next()
