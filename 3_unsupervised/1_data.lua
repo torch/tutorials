@@ -197,5 +197,6 @@ function displayData(dataset, nsamples, nrow, zoom)
       cntr = cntr + 1
    end
 
-   return image.display{image=ex, padding=2, symmetric=true, zoom=zoom, nrow=nrow, legend='Training Data'}
+   require 'gfx.js'
+   gfx.image(ex, {zoom=zoom, legend='Training Data'})
 end

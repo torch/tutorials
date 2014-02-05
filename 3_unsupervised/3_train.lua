@@ -155,8 +155,8 @@ for t = 1,params.maxiter,params.batchsize do
 
       -- live display
       if params.display then
-         _win1_ = image.display{image=dd, win=_win1_, legend='Decoder filters', zoom=2}
-         _win2_ = image.display{image=de, win=_win2_, legend='Encoder filters', zoom=2}
+         _win1_ = gfx.image(dd, {win=_win1_, legend='Decoder filters', zoom=2})
+         _win2_ = gfx.image(de, {win=_win2_, legend='Encoder filters', zoom=2})
       end
 
       -- save stuff

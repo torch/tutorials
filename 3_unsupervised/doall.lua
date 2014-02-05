@@ -58,7 +58,7 @@ cmd:option('-maxiter', 1000000, 'max number of updates')
 cmd:option('-tied', false, 'decoder weights are tied to encoder\'s weights (transposed)')
 
 -- use hessian information for training:
-cmd:option('-hessian', true, 'compute diagonal hessian coefficients to condition learning rates')
+cmd:option('-hessian', false, 'compute diagonal hessian coefficients to condition learning rates')
 cmd:option('-hessiansamples', 500, 'number of samples to use to estimate hessian')
 cmd:option('-hessianinterval', 10000, 'compute diagonal hessian coefs at every this many samples')
 cmd:option('-minhessian', 0.02, 'min hessian to avoid extreme speed up')
