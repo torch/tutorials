@@ -1,0 +1,6 @@
+results
+test_*
+train_*
+outputs
+tr-berkeley*
+mnist.t7*
