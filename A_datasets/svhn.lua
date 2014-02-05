@@ -62,10 +62,8 @@ testData = {
 ----------------------------------------------------------------------
 print '==> visualizing data'
 
--- Visualization is quite easy, using image.display(). Check out:
--- help(image.display), for more info about options.
-
-require 'image'
-image.display{image=trainData.data[{ {1,256} }], nrow=16, legend='Some training samples'}
-image.display{image=extraTrainData.data[{ {1,256} }], nrow=16, legend='Extra training samples'}
-image.display{image=testData.data[{ {1,256} }], nrow=16, legend='Some test samples'}
+-- Visualization is quite easy, using gfx.image().
+gfx = require 'gfx.js'
+gfx.image(trainData.data[{ {1,256} }], {legend='train'})
+gfx.image(extraTrainData.data[{ {1,256} }], {legend='extra'})
+gfx.image(testData.data[{ {1,256} }], {legend='test'})
