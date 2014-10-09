@@ -8,7 +8,7 @@
 -- and then press 'y' or 'return' at each step, to keep going, or 'n'
 -- to terminate.
 
-require 'gfx.go'
+require 'gfx.js'
 
 ----------------------------------------------------------------------
 -- little function to pause execution, and request user input
