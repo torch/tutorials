@@ -115,6 +115,9 @@ function train()
    -- local vars
    local time = sys.clock()
 
+   -- set model to training mode (for modules that differ in training and testing, like Dropout)
+   model:training()
+
    -- shuffle at each epoch
    shuffle = torch.randperm(trsize)
 

@@ -23,6 +23,9 @@ function test()
       parameters:copy(average)
    end
 
+   -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
+   model:evaluate()
+
    -- test over test data
    print('==> testing on test set:')
    for t = 1,testData:size() do
