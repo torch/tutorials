@@ -1,6 +1,6 @@
 
 require 'nn'
-require 'Dropout'
+require 'DropoutEx'
 
 print '==> testing backprop with Jacobian (finite element)'
 
@@ -10,7 +10,7 @@ print '==> testing backprop with Jacobian (finite element)'
 -- so the code is the same, except that we only generate
 -- the random noise once, for the whole test.
 firsttime = true
-function nn.Dropout.updateOutput(self, input)
+function nn.DropoutEx.updateOutput(self, input)
    if firsttime then
       self.noise:resizeAs(input)
       if self.p > 0 then
@@ -36,7 +36,7 @@ local inj = math.random(10,20)
 local ink = math.random(10,20)
 local percentage = 0.25
 local input = torch.Tensor(ini,inj,ink):zero()
-local module = nn.Dropout(percentage)
+local module = nn.DropoutEx(percentage)
 
 -- test backprop, with Jacobian
 local err = jac.testJacobian(module,input)

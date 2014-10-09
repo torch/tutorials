@@ -1,17 +1,17 @@
 require 'nn'
 
-local Dropout, Parent = torch.class('nn.Dropout', 'nn.Module')
+local DropoutEx, Parent = torch.class('nn.DropoutEx', 'nn.Module')
 
-function Dropout:__init(p)
+function DropoutEx:__init(p)
    Parent.__init(self)
    self.p = p or 0.5
    if self.p >= 1 or self.p < 0 then
-      error('<Dropout> illegal percentage, must be 0 <= p < 1')
+      error('<DropoutEx> illegal percentage, must be 0 <= p < 1')
    end
    self.noise = torch.Tensor()
 end
 
-function Dropout:updateOutput(input)
+function DropoutEx:updateOutput(input)
    self.noise:resizeAs(input)
    if self.p > 0 then
       self.noise:bernoulli(1-self.p)
@@ -24,7 +24,7 @@ function Dropout:updateOutput(input)
    return self.output
 end
 
-function Dropout:updateGradInput(input, gradOutput)
+function DropoutEx:updateGradInput(input, gradOutput)
    self.gradInput:resizeAs(gradOutput):copy(gradOutput)
    self.gradInput:cmul(self.noise) -- simply mask the gradients with the noise vector
    self.gradInput:div(1-self.p)

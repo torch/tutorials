@@ -1,12 +1,12 @@
 
 -- in this file, we test the dropout module we've defined:
 require 'nn'
-require 'Dropout'
+require 'DropoutEx'
 require 'image'
 require 'gfx.js'
 
 -- define a dropout object:
-n = nn.Dropout(0.5)
+n = nn.DropoutEx(0.5)
 
 -- load an image:
 i = image.lena()
