@@ -13,7 +13,7 @@ print '==> downloading dataset'
 --    + train: training data
 --    + test:  test data
 
-tar = 'http://data.neuflow.org/data/mnist.t7.tgz'
+tar = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/mnist.t7.tgz'
 
 if not paths.dirp('mnist.t7') then
    os.execute('wget ' .. tar)

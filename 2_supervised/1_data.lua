@@ -52,7 +52,7 @@ print '==> downloading dataset'
 -- By default, we don't use the extra training data, as it is much 
 -- more time consuming
 
-www = 'http://data.neuflow.org/data/housenumbers/'
+www = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/housenumbers/'
 
 train_file = 'train_32x32.t7'
 test_file = 'test_32x32.t7'

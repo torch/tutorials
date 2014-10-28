@@ -16,7 +16,7 @@ print '==> downloading dataset'
 --    + test:  test data
 --    + extra: extra training data
 
-tar = 'http://data.neuflow.org/data/svhn.t7.tgz'
+tar = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/svhn.t7.tgz'
 
 if not paths.dirp('housenumbers') then
    os.execute('wget ' .. tar)
