@@ -13,7 +13,9 @@ Make sure gfx.js is running for running Assignment 1.
  luajit -lgfx.start
 ```
 
-Each assignment contains a starter_code folder where you can begin the assignment. Once complete you can compare against the solution folder.
+Each assignment contains a starter_code folder where you can begin the assignment. 
+
+Once complete you can compare against the solution folder.
 
 ### Assignment 1
 

@@ -7,6 +7,7 @@ All words must be from the vocab list of 250 words.
  model = train(1);
  predict_next_word('life', 'in', 'new', model, 3);
 ```
+The full list of words can be seen in the model.vocab_ByIndex  object.
 
 Ouptut should be something similar to the following.
 
