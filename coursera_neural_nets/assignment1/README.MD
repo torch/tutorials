@@ -17,7 +17,7 @@ In learn_perceptron.lua complete the two sections where it says ‘Your code her
 
 You can change which dataset to load in main.lua
 
-‘’’ 
+‘’’ sh
  -- Choose between dataset1 to dataset4.
  dataset = 'data/dataset1.mat';
 ‘’’
