@@ -131,7 +131,6 @@ for i=1, num_neg_examples do
     
     activation = this_case*w;
     if (activation[{ 1, 1}] >= 0) then
-        
         -----------------
         -- YOUR CODE HERE
         -----------------
@@ -143,11 +142,9 @@ for i=1, num_pos_examples do
 
     activation = this_case*w;
     if (activation[{ 1, 1}] < 0) then
-        
         -----------------
         -- YOUR CODE HERE
         -----------------
-       
     end
 end
 
