@@ -21,3 +21,5 @@ You can change which dataset to load in main.lua
  -- Choose between dataset1 to dataset4.
  dataset = 'data/dataset1.mat';
 ```
+
+If you have gfx.js running you will see the data plotted at http://localhost:8000/
