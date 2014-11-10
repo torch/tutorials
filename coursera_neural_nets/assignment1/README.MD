@@ -1,17 +1,14 @@
 
-## Perceptron Algorithm.
+### Assignment 1
+
+Perceptron Algorithm.
+
+![Alt text](https://drive.google.com/open?id=0B4sGSGwnI5-jR05KeEwzQU0xOVU&authuser=0?raw=true "Optional Title")
+
+
+In learn_perceptron.lua complete the two sections where it says ‘Your code here’.
 
 
 
-``` sh
- model = train(1);
- predict_next_word('life', 'in', 'new', model, 3);
-```
 
-Ouptut should be something similar to the following.
-
-``` sh
- life in new york Prob: 0.953664
- life in new . Prob: 0.014226
- life in new world Prob: 0.005527
-```
+![Alt text](https://drive.google.com/open?id=0B4sGSGwnI5-jQjBicFpIcV9DZEU&authuser=0?raw=true "Optional Title")
