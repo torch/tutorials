@@ -2,11 +2,11 @@
 ### Assignment 2
 Neural network to predict next word in a sentence.
 
-Complete the sections in train.lua and fprop.lua where it says ‘Fill in code’.
+- Complete the sections in train.lua and fprop.lua where it says ‘Fill in code’.
 
-Run main.lua using three words and the neural net will predict the fourth.
+- Run main.lua using three words and the neural net will predict the fourth.
 
-All words must be from the vocab list of 250 words.
+- All words must be from the vocab list of 250 words.
 
 ``` sh
  model = train(1);
