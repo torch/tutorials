@@ -22,4 +22,4 @@ You can change which dataset to load in main.lua
  dataset = 'data/dataset1.mat';
 ```
 
-If you have gfx.js running you will see the data plotted at http://localhost:8000/
+If you have gfx.js running you will see the data plotted at [http://localhost:8000/](http://localhost:8000/)
