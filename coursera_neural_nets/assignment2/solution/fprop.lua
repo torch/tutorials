@@ -1,6 +1,4 @@
 
-require 'nn'
-
 function fprop(input_batch, word_embedding_weights, embed_to_hid_weights, 
                   hid_to_output_weights, hid_bias, output_bias)
 --[[% This method forward propagates through a neural network.
@@ -62,9 +60,10 @@ inputs_to_hidden_units = embed_to_hid_weights:transpose(1,2) * embedding_layer_s
 -- Apply logistic activation function.
 -- FILL IN CODE. Replace the line below by one of the options.
 -- hidden_layer_state = torch.zeros(numhid2, batchsize);
-hidden_layer_state = nn.Sigmoid():forward(inputs_to_hidden_units); -- (c)
--- The following commented line is the sigmoid without using nn module.
--- hidden_layer_state = ( ((-inputs_to_hidden_units):exp():add(1)):pow(-1) );
+hidden_layer_state = ( ((-inputs_to_hidden_units):exp():add(1)):pow(-1) ); -- (c)
+
+-- The following commented line is the sigmoid using the nn module.
+-- hidden_layer_state = nn.Sigmoid():forward(inputs_to_hidden_units); -- (c)
 
 -- Options
 --[[

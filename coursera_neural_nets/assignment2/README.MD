@@ -21,3 +21,5 @@ Ouptut should be something similar to the following.
  life in new . Prob: 0.014226
  life in new world Prob: 0.005527
 ```
+
+![network diagram](http://spark-public.s3.amazonaws.com/neuralnets/Programming%20Assignments/Assignment2/network.png)
