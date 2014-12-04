@@ -2,16 +2,16 @@ require 'load_data'
 require 'nn'
 require 'optim'
 
-
-function getNextBatch(train_input, train_target, m)
+-- Returns the next batch as a single datasource.
+function getNextBatch(input, target, m)
   
-  input_batch = train_input[{ {}, {}, m }]:transpose(1,2);
+  input_batch = input[{ {}, {}, m }]:transpose(1,2);
+  target_batch = target[{ {}, {}, m }]:transpose(1,2); 
 
-  target_batch = train_target[{ {}, {}, m }]:transpose(1,2);
   target_batch = torch.reshape(target_batch,(#target_batch)[1]); -- convert targets to a vector;
   
   dataset = {};
-  function dataset:size() return batchsize end 
+  function dataset:size() return (#target)[2] end 
   for i=1,dataset:size() do
       local input = input_batch[i];  
       local output = target_batch[i];
@@ -23,38 +23,39 @@ function getNextBatch(train_input, train_target, m)
   
 end
 
--- create closure to evaluate f(X) and df/dX
+-- Create a “closure” feval(x) that takes the 
+-- parameter vector as argument and returns 
+-- the loss and its gradient on the batch.
 feval = function(x)
-      -- get new parameters
-      parameters:copy(x)
+  -- get new parameters
+  parameters:copy(x)
 
-      -- reset gradients
-      gradParameters:zero()
+  -- reset gradients
+  gradParameters:zero()
 
-      -- f is the average of all criterions
-      local f = 0
+  -- f is the average of all criterions
+  local f = 0
 
-      -- evaluate function for complete mini batch
-      for i = 1,(#inputs)[1] do
-        -- estimate f
-        local output = model:forward(inputs[i])
-        local err = criterion:forward(output, targets[i])
-        f = f + err
+  -- evaluate function for complete mini batch
+  for i = 1,(#inputs)[1] do
+    -- estimate f
+    local output = model:forward(inputs[i])
+    local err = criterion:forward(output, targets[i])
+    f = f + err
 
-        -- estimate df/dW
-        local df_do = criterion:backward(output, targets[i])
-        model:backward(inputs[i], df_do) -- backprop.
-      end
+    -- estimate df/dW
+    local df_do = criterion:backward(output, targets[i])
+    model:backward(inputs[i], df_do) -- backprop.
+  end      
 
-      -- normalize gradients and f(X)
-      gradParameters:div((#inputs)[1])
-      f = f/(#inputs)[1];
+  -- normalize gradients and f(X)
+  gradParameters:div((#inputs)[1])
+  f = f/(#inputs)[1];
 
-      print(f);
-      -- return f and df/dX
-      return f,gradParameters
-                         
-    end
+  print(string.format("error: %f", f));
+  -- return f and df/dX
+  return f,gradParameters 
+end
 
 -- This function trains a neural network language model.
 function train(epochs,use_manual_technique)
@@ -73,11 +74,6 @@ momentum = 0.9;  -- Momentum; default = 0.9.
 numhid1 = 50;  -- Dimensionality of embedding space; default = 50.
 numhid2 = 200;  -- Number of units in hidden layer; default = 200.
 
--- VARIABLES FOR TRACKING TRAINING PROGRESS.
-show_training_CE_after = 100;
-show_validation_CE_after = 1000;
-
-
 -- LOAD DATA.
 train_input, train_target, valid_input, valid_target, test_input, test_target, vocab, vocab_size, vocab_ByIndex = load_data(batchsize);
 
@@ -93,6 +89,7 @@ model:add( nn.Sigmoid() );
 model:add( nn.Linear(numhid2,vocab_size) );      -- output layer is 250 units.
 model:add( nn.LogSoftMax() ); 
 
+-- minimize the negative log-likelihood
 criterion = nn.ClassNLLCriterion();
 trainer = nn.StochasticGradient(model, criterion);
 trainer.learningRate = learning_rate;
@@ -107,7 +104,7 @@ for epoch = 1,epochs do
    
     if use_manual_technique == false then
       
-      dataset = getNextBatch(train_input, train_target, m);
+      dataset,_,_ = getNextBatch(train_input, train_target, m);
       trainer:train(dataset); 
       
     else 
@@ -126,39 +123,6 @@ for epoch = 1,epochs do
 
   end
 end
-
-print('Finished Training.\n');
-
---[[
-print(string.format('Final Training CE %.3f\n', trainset_CE));
-
--- EVALUATE ON VALIDATION SET.
-print('\rRunning validation ...');
-
-embedding_layer_state, hidden_layer_state, output_layer_state = fprop(valid_input, word_embedding_weights, embed_to_hid_weights,hid_to_output_weights, hid_bias, output_bias);
-datasetsize = (#valid_input)[2];
-
-t =  valid_target[{1, {}}];
-expanded_valid_target = expansion_matrix:index(2,t:type('torch.LongTensor'));
-
-s = torch.cmul(expanded_valid_target, torch.log(output_layer_state + tiny));
-CE = -torch.sum(s) / datasetsize;
-print(string.format('\rFinal Validation CE %.3f\n', CE));
-
--- EVALUATE ON TEST SET.
-print('\rRunning test ...');
-embedding_layer_state, hidden_layer_state, output_layer_state = fprop(test_input, word_embedding_weights, embed_to_hid_weights,
-        hid_to_output_weights, hid_bias, output_bias);
-datasetsize = (#test_input)[2];
-
-t =  test_target[{1, {}}];
-expanded_test_target = expansion_matrix:index(2,t:type('torch.LongTensor'));
-
-s = torch.cmul(expanded_test_target, torch.log(output_layer_state + tiny));
-CE = -torch.sum(s) / datasetsize;
-print(string.format('\rFinal Test CE %.3f\n', CE));
-
-]]--
 
 diff = os.clock() - start_time;
 print(string.format('Training took %.2f seconds\n', diff));

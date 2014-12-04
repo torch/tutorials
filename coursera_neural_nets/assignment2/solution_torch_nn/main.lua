@@ -1,7 +1,5 @@
 require 'train'
 require 'predict_next_word'
-require 'display_nearest_words'
-
 
 use_manual_technique = false;
 epochs = 1;
