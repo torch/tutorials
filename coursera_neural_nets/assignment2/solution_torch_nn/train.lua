@@ -2,61 +2,6 @@ require 'load_data'
 require 'nn'
 require 'optim'
 
--- Returns the next batch as a single datasource.
-function getNextBatch(input, target, m)
-  
-  input_batch = input[{ {}, {}, m }]:transpose(1,2);
-  target_batch = target[{ {}, {}, m }]:transpose(1,2); 
-
-  target_batch = torch.reshape(target_batch,(#target_batch)[1]); -- convert targets to a vector;
-  
-  dataset = {};
-  function dataset:size() return (#target)[2] end 
-  for i=1,dataset:size() do
-      local input = input_batch[i];  
-      local output = target_batch[i];
-          
-      dataset[i] = {input, output}
-  end
-  
-  return dataset, input_batch, target_batch;
-  
-end
-
--- Create a “closure” feval(x) that takes the 
--- parameter vector as argument and returns 
--- the loss and its gradient on the batch.
-feval = function(x)
-  -- get new parameters
-  parameters:copy(x)
-
-  -- reset gradients
-  gradParameters:zero()
-
-  -- f is the average of all criterions
-  local f = 0
-
-  -- evaluate function for complete mini batch
-  for i = 1,(#inputs)[1] do
-    -- estimate f
-    local output = model:forward(inputs[i])
-    local err = criterion:forward(output, targets[i])
-    f = f + err
-
-    -- estimate df/dW
-    local df_do = criterion:backward(output, targets[i])
-    model:backward(inputs[i], df_do) -- backprop.
-  end      
-
-  -- normalize gradients and f(X)
-  gradParameters:div((#inputs)[1])
-  f = f/(#inputs)[1];
-
-  print(string.format("error: %f", f));
-  -- return f and df/dX
-  return f,gradParameters 
-end
-
 -- This function trains a neural network language model.
 function train(epochs,use_manual_technique)
 --[[% Inputs:
@@ -81,20 +26,22 @@ numwords = (#train_input)[1];
 batchsize = (#train_input)[2];
 numbatches = (#train_input)[3];
 
+-- Create the neural net.
 model = nn.Sequential();
-model:add( nn.LookupTable(vocab_size, numhid1)); -- lookuptable, so for 3 inputs will produce a 3 x 50 matrix.
+model:add( nn.LookupTable(vocab_size, numhid1)); -- lookuptable, so for 3 inputs (words) will produce a 3 x 50 matrix.
 model:add( nn.Reshape(numwords*numhid1));        -- reshape 3 x 50 matrix to 150 units which is the first layer.
 model:add( nn.Linear(numwords*numhid1,numhid2)); -- second layer is 200 units.
-model:add( nn.Sigmoid() );           
+model:add( nn.Sigmoid() );                       -- activation function.
 model:add( nn.Linear(numhid2,vocab_size) );      -- output layer is 250 units.
 model:add( nn.LogSoftMax() ); 
 
--- minimize the negative log-likelihood
+-- Minimize the negative log-likelihood
 criterion = nn.ClassNLLCriterion();
 trainer = nn.StochasticGradient(model, criterion);
 trainer.learningRate = learning_rate;
 trainer.maxIteration = 1;
 
+-- Train the model.
 for epoch = 1,epochs do
   print(string.format('Epoch %.0f', epoch));
   
@@ -132,4 +79,60 @@ model.vocab_ByIndex = vocab_ByIndex;
 
 return model;
 
+end
+
+-- Returns the next batch as a single datasource.
+function getNextBatch(input, target, m)
+  
+  input_batch = input[{ {}, {}, m }]:transpose(1,2);
+  target_batch = target[{ {}, {}, m }]:transpose(1,2); 
+
+  target_batch = torch.reshape(target_batch,(#target_batch)[1]); -- convert targets to a vector;
+  
+  dataset = {};
+  function dataset:size() return (#target)[2] end 
+  for i=1,dataset:size() do
+      local input = input_batch[i];  
+      local output = target_batch[i];
+          
+      dataset[i] = {input, output}
+  end
+  
+  return dataset, input_batch, target_batch;
+  
+end
+
+-- Create a “closure” feval(x) that takes the 
+-- parameter vector as argument and returns 
+-- the loss and its gradient on the batch.
+-- This function will be used by the optimizer (optim.sgd).
+feval = function(x)
+  -- get new parameters
+  parameters:copy(x)
+
+  -- reset gradients
+  gradParameters:zero()
+
+  -- f is the average of all criterions
+  local f = 0
+
+  -- evaluate function for complete mini batch
+  for i = 1,(#inputs)[1] do
+    -- estimate f
+    local output = model:forward(inputs[i])
+    local err = criterion:forward(output, targets[i])
+    f = f + err
+
+    -- estimate df/dW
+    local df_do = criterion:backward(output, targets[i])
+    model:backward(inputs[i], df_do) -- backprop.
+  end      
+
+  -- normalize gradients and f(X)
+  gradParameters:div((#inputs)[1])
+  f = f/(#inputs)[1];
+
+  print(string.format("error: %f", f));
+  -- return f and df/dX
+  return f,gradParameters 
 end
