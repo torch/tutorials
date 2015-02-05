@@ -197,6 +197,5 @@ function displayData(dataset, nsamples, nrow, zoom)
       cntr = cntr + 1
    end
 
-   require 'gfx.js'
-   gfx.image(ex, {zoom=zoom, legend='Training Data'})
+   itorch.image(ex)
 end
