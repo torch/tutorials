@@ -3,7 +3,6 @@
 require 'nn'
 require 'DropoutEx'
 require 'image'
-require 'gfx.js'
 
 -- define a dropout object:
 n = nn.DropoutEx(0.5)
@@ -15,8 +14,10 @@ i = image.lena()
 result = n:forward(i)
 
 -- display results:
-gfx.image(i, {legend='original image'})
-gfx.image(result, {legend='dropout-processed image'})
+print('original image:')
+itorch.image(i)
+print('result image:')
+itorch.image(result)
 
 -- some stats:
 mse = i:dist(result)
