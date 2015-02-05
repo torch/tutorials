@@ -62,8 +62,12 @@ testData = {
 ----------------------------------------------------------------------
 print '==> visualizing data'
 
--- Visualization is quite easy, using gfx.image().
-gfx = require 'gfx.js'
-gfx.image(trainData.data[{ {1,256} }], {legend='train'})
-gfx.image(extraTrainData.data[{ {1,256} }], {legend='extra'})
-gfx.image(testData.data[{ {1,256} }], {legend='test'})
+-- Visualization is quite easy, using itorch.image().
+if itorch then
+   print('training data:')
+   itorch.image(trainData.data[{ {1,256} }])
+   print('extra training data:')
+   itorch.image(extraTrainData.data[{ {1,256} }])
+   print('test data:')
+   itorch.image(testData.data[{ {1,256} }])
+end
