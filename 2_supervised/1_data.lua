@@ -16,7 +16,6 @@
 
 require 'torch'   -- torch
 require 'image'   -- for color transforms
-require 'gfx.js'  -- to visualize the dataset
 require 'nn'      -- provides a normalization operator
 
 ----------------------------------------------------------------------
@@ -236,13 +235,13 @@ end
 ----------------------------------------------------------------------
 print '==> visualizing data'
 
--- Visualization is quite easy, using gfx.image().
+-- Visualization is quite easy, using itorch.image().
 
 if opt.visualize then
    first256Samples_y = trainData.data[{ {1,256},1 }]
    first256Samples_u = trainData.data[{ {1,256},2 }]
    first256Samples_v = trainData.data[{ {1,256},3 }]
-   gfx.image(first256Samples_y, {legend='Y'})
-   gfx.image(first256Samples_u, {legend='U'})
-   gfx.image(first256Samples_v, {legend='V'})
+   itorch.image(first256Samples_y)
+   itorch.image(first256Samples_u)
+   itorch.image(first256Samples_v)
 end
