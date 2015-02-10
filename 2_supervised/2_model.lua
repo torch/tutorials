@@ -141,10 +141,14 @@ print(model)
 
 if opt.visualize then
    if opt.model == 'convnet' then
-      print '==> visualizing ConvNet filters'
-      print('Layer 1 filters:')
-      itorch.image(model:get(1).weight)
-      print('Layer 2 filters:')
-      itorch.image(model:get(5).weight)
+      if itorch then
+	 print '==> visualizing ConvNet filters'
+	 print('Layer 1 filters:')
+	 itorch.image(model:get(1).weight)
+	 print('Layer 2 filters:')
+	 itorch.image(model:get(5).weight)
+      else
+	 print '==> To visualize filters, start the script in itorch notebook'
+      end
    end
 end

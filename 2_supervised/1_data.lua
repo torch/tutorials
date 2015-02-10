@@ -238,10 +238,14 @@ print '==> visualizing data'
 -- Visualization is quite easy, using itorch.image().
 
 if opt.visualize then
+   if itorch then
    first256Samples_y = trainData.data[{ {1,256},1 }]
    first256Samples_u = trainData.data[{ {1,256},2 }]
    first256Samples_v = trainData.data[{ {1,256},3 }]
    itorch.image(first256Samples_y)
    itorch.image(first256Samples_u)
    itorch.image(first256Samples_v)
+   else
+      print("For visualization, run this script in an itorch notebook")
+   end
 end
