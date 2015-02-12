@@ -196,6 +196,9 @@ function displayData(dataset, nsamples, nrow, zoom)
       ex[cntr] = exx[1]:clone():unfold(1,math.sqrt(exx[1]:size(1)),math.sqrt(exx[1]:size(1)))
       cntr = cntr + 1
    end
-
-   itorch.image(ex)
+   if itorch then
+      itorch.image(ex)
+   else
+      print('For visualization, run the script in itorch')
+   end
 end
