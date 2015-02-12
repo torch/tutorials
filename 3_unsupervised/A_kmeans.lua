@@ -10,7 +10,6 @@
 
 require 'image'
 require 'unsup'
-require 'gfx.js'
 
 ----------------------------------------------------------------------
 -- parse command-line options
@@ -86,7 +85,9 @@ function cb (step,kernels)
    for i = 1,params.nkernels do
       filters[i] = ks[i]:clone():div(ks[i]:max())
    end
-   gfx.image(filters, {zoom=2, legend='K-Means Centroids'})
+   if itorch then
+      itorch.image(filters)
+   end
 end
 
 -- run k-means

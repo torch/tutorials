@@ -155,8 +155,14 @@ for t = 1,params.maxiter,params.batchsize do
 
       -- live display
       if params.display then
-         _win1_ = gfx.image(dd, {win=_win1_, legend='Decoder filters', zoom=2})
-         _win2_ = gfx.image(de, {win=_win2_, legend='Encoder filters', zoom=2})
+	 if itorch then
+	    print('Decoder filters')
+	    itorch.image(dd)
+	    print('Encoder filters')
+	    itorch.image(de)
+	 else
+	    print('run in itorch for visualization')
+	 end
       end
 
       -- save stuff
