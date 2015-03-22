@@ -63,7 +63,7 @@ for t = 1,params.maxiter,params.batchsize do
    -- progress
    --
    iter = iter+1
-   xlua.progress(iter, params.statinterval)
+   xlua.progress(iter*params.batchsize, params.statinterval)
 
    --------------------------------------------------------------------
    -- create mini-batch
@@ -114,7 +114,7 @@ for t = 1,params.maxiter,params.batchsize do
                          learningRates = etas,
                          momentum = params.momentum}
    _,fs = optim.sgd(feval, x, sgdconf)
-   err = err + fs[1]
+   err = err + fs[1]*params.batchsize -- so that err is indep of batch size
 
    -- normalize
    if params.model:find('psd') then
@@ -124,7 +124,7 @@ for t = 1,params.maxiter,params.batchsize do
    --------------------------------------------------------------------
    -- compute statistics / report error
    --
-   if math.fmod(t , params.statinterval) == 0 then
+   if iter*params.batchsize >= params.statinterval then
 
       -- report
       print('==> iteration = ' .. t .. ', average loss = ' .. err/params.statinterval)
