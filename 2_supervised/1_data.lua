@@ -16,7 +16,6 @@
 
 require 'torch'   -- torch
 require 'image'   -- for color transforms
-require 'gfx.js'  -- to visualize the dataset
 require 'nn'      -- provides a normalization operator
 
 ----------------------------------------------------------------------
@@ -52,7 +51,7 @@ print '==> downloading dataset'
 -- By default, we don't use the extra training data, as it is much 
 -- more time consuming
 
-www = 'http://data.neuflow.org/data/housenumbers/'
+www = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/housenumbers/'
 
 train_file = 'train_32x32.t7'
 test_file = 'test_32x32.t7'
@@ -236,13 +235,17 @@ end
 ----------------------------------------------------------------------
 print '==> visualizing data'
 
--- Visualization is quite easy, using gfx.image().
+-- Visualization is quite easy, using itorch.image().
 
 if opt.visualize then
+   if itorch then
    first256Samples_y = trainData.data[{ {1,256},1 }]
    first256Samples_u = trainData.data[{ {1,256},2 }]
    first256Samples_v = trainData.data[{ {1,256},3 }]
-   gfx.image(first256Samples_y, {legend='Y'})
-   gfx.image(first256Samples_u, {legend='U'})
-   gfx.image(first256Samples_v, {legend='V'})
+   itorch.image(first256Samples_y)
+   itorch.image(first256Samples_u)
+   itorch.image(first256Samples_v)
+   else
+      print("For visualization, run this script in an itorch notebook")
+   end
 end

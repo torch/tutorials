@@ -16,7 +16,7 @@ print '==> downloading dataset'
 --    + test:  test data
 --    + extra: extra training data
 
-tar = 'http://data.neuflow.org/data/svhn.t7.tgz'
+tar = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/svhn.t7.tgz'
 
 if not paths.dirp('housenumbers') then
    os.execute('wget ' .. tar)
@@ -62,8 +62,12 @@ testData = {
 ----------------------------------------------------------------------
 print '==> visualizing data'
 
--- Visualization is quite easy, using gfx.image().
-gfx = require 'gfx.js'
-gfx.image(trainData.data[{ {1,256} }], {legend='train'})
-gfx.image(extraTrainData.data[{ {1,256} }], {legend='extra'})
-gfx.image(testData.data[{ {1,256} }], {legend='test'})
+-- Visualization is quite easy, using itorch.image().
+if itorch then
+   print('training data:')
+   itorch.image(trainData.data[{ {1,256} }])
+   print('extra training data:')
+   itorch.image(extraTrainData.data[{ {1,256} }])
+   print('test data:')
+   itorch.image(testData.data[{ {1,256} }])
+end

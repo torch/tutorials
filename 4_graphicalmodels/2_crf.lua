@@ -46,15 +46,15 @@ do
    X = X + randn(X:size())/2
 
    -- display a couple of input examples
-   require 'gfx.js'
-   gfx.image({
-      X[1]:reshape(32,32),
-      X[2]:reshape(32,32),
-      X[3]:reshape(32,32),
-      X[4]:reshape(32,32)
-   }, {
-      zoom=4, legend='training examples'
-   })
+   if itorch then
+      print('training examples visualization:')
+      itorch.image({
+	    X[1]:reshape(32,32),
+	    X[2]:reshape(32,32),
+	    X[3]:reshape(32,32),
+	    X[4]:reshape(32,32)
+      })
+   end
 
    -- define adjacency matrix (4-connexity lattice)
    local adj = gm.adjacency.lattice2d(nRows,nCols,4)
@@ -146,13 +146,15 @@ do
    end
 
    -- display
-   gfx.image(marginals, {
-      zoom=4, legend='marginals'
-   })
+   if itorch then
+      print('marginals:')
+      itorch.image(marginals)
+   end
    for _,labeling in ipairs(labelings) do
       labeling:add(-1)
    end
-   gfx.image(labelings, {
-      zoom=4, legend='labelings'
-   })
+   if itorch then
+      print('labelings:')
+      itorch.image(labelings)
+   end
 end

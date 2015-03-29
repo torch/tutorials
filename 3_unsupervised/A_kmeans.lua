@@ -10,7 +10,6 @@
 
 require 'image'
 require 'unsup'
-require 'gfx.js'
 
 ----------------------------------------------------------------------
 -- parse command-line options
@@ -21,7 +20,7 @@ cmd:text('Training a simple sparse coding dictionary on Berkeley images')
 cmd:text()
 cmd:text('Options')
 cmd:option('-dir', 'outputs', 'subdirectory to save experiments in')
-cmd:option('-datafile', 'http://data.neuflow.org/data/tr-berkeley-N5K-M56x56-lcn.ascii', 'Dataset URL')
+cmd:option('-datafile', 'http://torch7.s3-website-us-east-1.amazonaws.com/data/tr-berkeley-N5K-M56x56-lcn.ascii', 'Dataset URL')
 cmd:option('-seed', 1, 'initial random seed')
 cmd:option('-threads', 4, 'threads')
 cmd:option('-inputsize', 9, 'size of each input patches')
@@ -86,7 +85,9 @@ function cb (step,kernels)
    for i = 1,params.nkernels do
       filters[i] = ks[i]:clone():div(ks[i]:max())
    end
-   gfx.image(filters, {zoom=2, legend='K-Means Centroids'})
+   if itorch then
+      itorch.image(filters)
+   end
 end
 
 -- run k-means
