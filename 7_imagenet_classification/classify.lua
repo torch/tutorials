@@ -38,12 +38,12 @@ model_name = 'nin_imagenet.caffemodel'
 img_mean_name = 'ilsvrc_2012_mean.t7'
 image_name = 'Goldfish3.jpg'
 
-prototxt_url = 'https://raw.githubusercontent.com/BVLC/caffe/master/models/bvlc_reference_caffenet/'..proto_name
+prototxt_url = 'http://git.io/vIdRW'
 model_url = 'https://www.dropbox.com/s/0cidxafrb2wuwxw/'..model_name
 img_mean_url = 'https://www.dropbox.com/s/p33rheie3xjx6eu/'..img_mean_name
 image_url = 'http://upload.wikimedia.org/wikipedia/commons/e/e9/Goldfish3.jpg'
 
-if not paths.filep(proto_name) then os.execute('wget '..prototxt_url) end
+if not paths.filep(proto_name) then os.execute('wget '..prototxt_url..' -O '..proto_name) end
 if not paths.filep(model_name) then os.execute('wget '..model_url)    end
 if not paths.filep(img_mean_name) then os.execute('wget '..img_mean_url) end
 if not paths.filep(image_name) then os.execute('wget '..image_url)   end
@@ -51,11 +51,9 @@ if not paths.filep(image_name) then os.execute('wget '..image_url)   end
 
 
 print '==> Loading network'
--- we'll use the fastest CUDA ConvNet implementation available, cuda-convnet2
--- this loads the network in Caffe format and returns in Torch format, ready to use!
---net = loadcaffe.load(proto_name, model_name, 'cudnn')
-net = loadcaffe.load(proto_name, './nin_imagenet.caffemodel', 'nn')
-net.modules[#net.modules] = nn.View(1000):setNumInputDims(3)
+-- Using network in network http://openreview.net/document/9b05a3bb-3a5e-49cb-91f7-0f482af65aea
+net = loadcaffe.load(proto_name, './nin_imagenet.caffemodel')
+net.modules[#net.modules] = nil -- remove the top softmax
 
 -- as we want to classify, let's disable dropouts by enabling evaluation mode
 net:evaluate()
@@ -71,18 +69,8 @@ print '==> Preprocessing'
 -- Have to resize and convert from RGB to BGR and subtract mean
 I = preprocess(im, img_mean)
 
--- cuda-convnet2 implementation support only batched routines, so
--- we have to allocate memory for 32 inputs and then put crops to 10 of them.
--- let's however use just one image for simplicity.
--- note that for other networks that use cunn ore cudnn that might not be needed
-batch = torch.CudaTensor(1,3,224,224)
-batch[1]:copy(I)
-
-print '==> Propagating through the network'
-net:forward(batch)
-
--- sort outputs in decreasing order
-_,classes = net.output[{1,{}}]:float():sort(true)
+-- Propagate through the network and sort outputs in decreasing order and show 5 best classes
+_,classes = net:forward(I:cuda()):view(-1):float():sort(true)
 for i=1,5 do
   print('predicted class '..tostring(i)..': ', synset_words[classes[i] ])
 end
