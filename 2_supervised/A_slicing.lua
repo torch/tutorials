@@ -4,7 +4,7 @@
 -- This script demonstrates tensor slicing / manipulation.
 
 -- To run this script, simply do:
--- torch slicing.lua
+-- $ th A_slicing.lua
 -- and then press 'y' or 'return' at each step, to keep going.
 
 -- little function to pause execution, and request user input

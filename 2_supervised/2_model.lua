@@ -6,7 +6,7 @@
 --   + convolutional network (ConvNet)
 --
 -- It's a good idea to run this script with the interactive mode:
--- $ torch -i 2_model.lua
+-- $ th -i 2_model.lua
 -- this will give you a Torch interpreter at the end, that you
 -- can use to play with the model.
 --

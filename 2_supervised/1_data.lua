@@ -2,12 +2,12 @@
 -- This script demonstrates how to load the (SVHN) House Numbers 
 -- training data, and pre-process it to facilitate learning.
 --
--- The SVHN is a typicaly example of supervised training dataset. 
+-- The SVHN is a typical example of supervised training dataset.
 -- The problem to solve is a 10-class classification problem, similar
 -- to the quite known MNIST challenge.
 --
 -- It's a good idea to run this script with the interactive mode:
--- $ torch -i 1_data.lua
+-- $ th -i 1_data.lua
 -- this will give you a Torch interpreter at the end, that you
 -- can use to analyze/visualize the data you've just loaded.
 --
