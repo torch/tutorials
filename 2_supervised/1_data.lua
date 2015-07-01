@@ -2,7 +2,7 @@
 -- This script demonstrates how to load the (SVHN) House Numbers 
 -- training data, and pre-process it to facilitate learning.
 --
--- The SVHN is a typicaly example of supervised training dataset. 
+-- The SVHN is a typical example of supervised training dataset.
 -- The problem to solve is a 10-class classification problem, similar
 -- to the quite known MNIST challenge.
 --
