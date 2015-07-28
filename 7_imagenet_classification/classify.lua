@@ -52,7 +52,7 @@ if not paths.filep(image_name) then os.execute('wget '..image_url)   end
 
 print '==> Loading network'
 -- Using network in network http://openreview.net/document/9b05a3bb-3a5e-49cb-91f7-0f482af65aea
-net = loadcaffe.load(proto_name, './nin_imagenet.caffemodel')
+net = loadcaffe.load(proto_name, './nin_imagenet.caffemodel'):cuda()
 net.modules[#net.modules] = nil -- remove the top softmax
 
 -- as we want to classify, let's disable dropouts by enabling evaluation mode
