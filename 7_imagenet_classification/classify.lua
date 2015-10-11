@@ -22,10 +22,7 @@ function preprocess(im, img_mean)
   -- rescale the image
   local im3 = image.scale(im,224,224,'bilinear')*255
   -- RGB2BGR
-  local im4 = im3:clone()
-  im4[{1,{},{}}] = im3[{3,{},{}}]
-  im4[{3,{},{}}] = im3[{1,{},{}}]
-
+  local im4 = im3:index(1,torch.LongTensor{3,2,1})
   -- subtract imagenet mean
   return im4 - image.scale(img_mean, 224, 224, 'bilinear')
 end
