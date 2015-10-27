@@ -112,11 +112,11 @@ trainData = {
 if opt.size == 'extra' then
    loaded = torch.load(extra_file,'ascii')
    trdata = torch.Tensor(trsize,3,32,32)
-   trdata[{ {1,(#trainData.data)[1]} }] = trainData.data
-   trdata[{ {(#trainData.data)[1]+1,-1} }] = loaded.X:transpose(3,4)
+   trdata[{ {1,trainData.data:size(1)} }] = trainData.data
+   trdata[{ {trainData.data:size(1)+1,-1} }] = loaded.X:transpose(3,4)
    trlabels = torch.Tensor(trsize)
-   trlabels[{ {1,(#trainData.labels)[1]} }] = trainData.labels
-   trlabels[{ {(#trainData.labels)[1]+1,-1} }] = loaded.y[1]
+   trlabels[{ {1,trainData.labels:size(1)} }] = trainData.labels
+   trlabels[{ {trainData.labels:size(1)+1,-1} }] = loaded.y[1]
    trainData = {
       data = trdata,
       labels = trlabels,
