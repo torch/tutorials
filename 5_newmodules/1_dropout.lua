@@ -13,11 +13,13 @@ i = image.lena()
 -- process the image:
 result = n:forward(i)
 
--- display results:
-print('original image:')
-itorch.image(i)
-print('result image:')
-itorch.image(result)
+if itorch then
+   -- display results:
+   print('original image:')
+   itorch.image(i)
+   print('result image:')
+   itorch.image(result)
+end
 
 -- some stats:
 mse = i:dist(result)
