@@ -6,16 +6,12 @@ require 'image'
 
 -- Loads the mapping from net outputs to human readable labels
 function load_synset()
-  local file = io.open 'synset_words.txt'
   local list = {}
-  while true do
-    local line = file:read()
-    if not line then break end
+  for line in io.lines'synset_words.txt' do
     table.insert(list, string.sub(line,11))
   end
   return list
 end
-
 
 -- Converts an image from RGB to BGR format and subtracts mean
 function preprocess(im, img_mean)
@@ -26,8 +22,6 @@ function preprocess(im, img_mean)
   -- subtract imagenet mean
   return im4 - image.scale(img_mean, 224, 224, 'bilinear')
 end
-
-
 
 -- Setting up networks and downloading stuff if needed
 proto_name = 'deploy.prototxt'
@@ -44,7 +38,6 @@ if not paths.filep(proto_name) then os.execute('wget '..prototxt_url..' -O '..pr
 if not paths.filep(model_name) then os.execute('wget '..model_url)    end
 if not paths.filep(img_mean_name) then os.execute('wget '..img_mean_url) end
 if not paths.filep(image_name) then os.execute('wget '..image_url)   end
-
 
 
 print '==> Loading network'
@@ -67,7 +60,7 @@ print '==> Preprocessing'
 I = preprocess(im, img_mean)
 
 -- Propagate through the network and sort outputs in decreasing order and show 5 best classes
-_,classes = net:forward(I):view(-1):float():sort(true)
+_,classes = net:forward(I):view(-1):sort(true)
 for i=1,5 do
   print('predicted class '..tostring(i)..': ', synset_words[classes[i] ])
 end
