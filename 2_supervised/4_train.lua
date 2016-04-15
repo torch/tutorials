@@ -135,8 +135,17 @@ function train()
          -- load new sample
          local input = trainData.data[shuffle[i]]
          local target = trainData.labels[shuffle[i]]
-         if opt.type == 'double' then input = input:double()
-         elseif opt.type == 'cuda' then input = input:cuda() end
+         if opt.type == 'double' then
+            input = input:double()
+            if opt.loss == 'mse' then
+               target = target:double()
+            end
+         elseif opt.type == 'cuda' then
+            input = input:cuda();
+            if opt.loss == 'mse' then
+               target = target:cuda()
+            end
+         end
          table.insert(inputs, input)
          table.insert(targets, target)
       end
